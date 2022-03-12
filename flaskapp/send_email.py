@@ -1,6 +1,5 @@
 from flask_mail import Message, smtplib
 from flaskapp import mail, db
-from flaskapp.models import User_history
 from flask_login import current_user
 import os
 
