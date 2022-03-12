@@ -5,10 +5,13 @@ from flaskapp.models import User,Booking
 from flask_login import login_user , current_user , logout_user , login_required
 from datetime import datetime
 
+from flaskapp.send_email import send_email
+
 
 @app.route("/")
 def index():
 
+    send_email()
     return jsonify({'welcome':'Home Page'}) 
 
 
