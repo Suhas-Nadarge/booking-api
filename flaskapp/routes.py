@@ -1,8 +1,9 @@
-from flaskapp import db,app
+from flaskapp import db,app,bcrypt
 from flask import request
 from flask_jsonpify import jsonify
 from flaskapp.models import User,Booking
 from flask_login import login_user , current_user , logout_user , login_required
+from datetime import datetime
 
 
 @app.route("/")
@@ -34,7 +35,7 @@ def register():
         user = User.query.filter_by(email=email).first()
 
         if user:
-            return jsonify({'status': 'fail', 'message': 'User already registered.'})
+            return jsonify({'status': 'fail', 'message': 'User already registered.'}),500
         
 
         hashed_passwd = bcrypt.generate_password_hash(password).decode('utf-8')
@@ -67,7 +68,7 @@ def login():
     
     if user and bcrypt.check_password_hash(user.password,password):
         login_user(user)
-        return jsonify({'status':'success','user':user}), 200
+        return jsonify({'status':'success','id':user.id,'isDoctor':user.isDoctor,'firstname':user.firstname}), 200
     else:
         return jsonify({'status':'fail','massage':'something went wrong'}) , 401
 
@@ -103,9 +104,11 @@ def get_all_doctors():
 def book_appointments():
 
     data = request.get_json()
-
     reason = data['reason']
-    appointment_date = data['appointment_date']
+    # appointment_date = data['appointment_date']
+    appointment_date = datetime.strptime(data['appointment_date'] , '%Y-%m-%dT%H:%M:%S.%fZ')
+    # appointment_date = datetime.strftime(data['appointment_date'],'%Y-%m-%dT%H:%M:%SZ')
+    print(appointment_date)
     additional_comments = data['additional_comments']
     slot_number = data['slot_number']
     patient_id = data['patient_id']
@@ -115,7 +118,7 @@ def book_appointments():
                 slot_number=slot_number,patient_id=patient_id,doctors_id=doctors_id)
 
     db.session.add(appointment)
-    db.session.commit(appointment)
+    db.session.commit()
     
     return jsonify({'massage':'booking done'}) ,200
 
@@ -126,8 +129,8 @@ def get_day_appointments(doctor_id):
 
 
     appointments_list = [ 
-        {'appointment_date': appointment.appointment_date,
-        'slot_number': appointment.slot_number, 'patient_name': get_patient_details_from_id(patient_id) } 
+        {'appointment_date': appointment.appointment_date,'reason':appointment.reason,
+        'slot_number': appointment.slot_number, 'patient_name': get_patient_details_from_id(appointment.patient_id) } 
         for appointment in appointments
     ]
 

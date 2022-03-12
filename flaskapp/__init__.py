@@ -1,5 +1,6 @@
 from flask import Flask , request
 from flask_cors import CORS , cross_origin 
+from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 import os
@@ -15,6 +16,8 @@ app.config['SECRET_KEY'] = '33031f10631062e325547a964ef12b3d'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 db = SQLAlchemy(app)
 
+#for passswd hashing 
+bcrypt = Bcrypt(app)
 
 
 # to handle user login
