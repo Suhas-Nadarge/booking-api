@@ -28,6 +28,7 @@ class Booking(db.Model):
     appointment_date = db.Column(db.DateTime, nullable=False,default=datetime.now())
     additional_comments = db.Column(db.Text, nullable=False)
     slot_number = db.Column(db.Integer,nullable=False)
+    slot = db.Column(db.String(120),nullable=False)
     patient_id = db.Column(db.Integer,nullable=False)
     doctors_id = db.Column(db.Integer,nullable=False)
     isCancelled = db.Column(db.Boolean, default=False, nullable=False)
