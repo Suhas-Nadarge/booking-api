@@ -136,7 +136,7 @@ def get_day_appointments(doctor_id):
 
     appointments_list = [ 
         {'appointment_date': appointment.appointment_date,'reason':appointment.reason,
-        'slot_number': appointment.slot_number,'patient_id':appointment.patient_id, 'patient_name': get_patient_details_from_id(appointment.patient_id),'isCancelled': appointment.isCancelled, } 
+        'slot_number': appointment.slot_number, 'slot': appointment.slot,'patient_id':appointment.patient_id, 'patient_name': get_patient_details_from_id(appointment.patient_id),'isCancelled': appointment.isCancelled, } 
         for appointment in appointments
     ]
 
