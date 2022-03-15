@@ -19,11 +19,11 @@ def send_email(email, flag, dr, name, date, slot):
         print(email)
         if flag == 'isBooked':
             msg = Message(recipients=[email],
-                        html= f"<p>Hi {name},<br>Your appointment with Dr {dr} is booked successfully.<br>Time: {date.strftime('%A, %m %B %Y')} {slot} <br><br><br>Thanks &amp; Regards,<br><b>Team MyDocs.ie<b><br>",
+                        html= f"<p>Hi {name},<br>Your appointment with Dr {dr} is booked successfully.<br>Time: {date.strftime('%A, %d %B %Y')} {slot} <br><br><br>Thanks &amp; Regards,<br><b>Team MyDocs.ie<b><br>",
                         subject='Booking Confirmed')
         else:
              msg = Message(recipients=[email],
-                        html= f"<p>Hi {name},<br>Your appointment with Dr {dr} has been cancelled.<br>Time: {date.strftime('%A, %m %B %Y')} {slot} <br><br><br>Thanks &amp; Regards,<br><b>Team MyDocs.ie<b><br>",
+                        html= f"<p>Hi {name},<br>Your appointment with Dr {dr} has been cancelled.<br>Time: {date.strftime('%A, %d  %B %Y')} {slot} <br><br><br>Thanks &amp; Regards,<br><b>Team MyDocs.ie<b><br>",
                         subject='Booking Cancelled')
         try:
             conn.send(msg)

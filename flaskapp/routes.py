@@ -121,22 +121,29 @@ def book_appointments():
                 slot_number=slot_number,slot = slot, patient_id=patient_id,doctors_id=doctors_id)
     userObj = User.query.filter_by(id=patient_id).first()
     print(userObj)
-    doctor = get_patient_details_from_id(doctors_id)
+    doctor = get_user_details_from_id(doctors_id)
     db.session.add(appointment)
     send_email(userObj.email,'isBooked',doctor, userObj.firstname,appointment_date,slot)
     db.session.commit()
     
     return jsonify({'massage':'booking done'}) ,200
 
-@app.route("/getDocsAppointments/<int:doctor_id>",methods=['GET'])
-def get_day_appointments(doctor_id):
+# @app.route("/getDocsAppointments/<int:doctor_id>",methods=['GET'])
+@app.route("/getDocsAppointments",methods=['POST'])
 
-    appointments = Booking.query.filter_by(doctors_id=doctor_id).all()
-
-
+def get_day_appointments():
+    # doctor_name
+    data = request.get_json()
+    if data['isPatient']:
+        appointments = Booking.query.filter_by(patient_id=data['id']).all()
+        # doctor_name = 
+    else:
+        appointments = Booking.query.filter_by(doctors_id=data['id']).all()
+        # doctor_name = get_user_details_from_id(data['id']) a if a < b else b
+    doc_name = get_user_details_from_id(appointments[0].doctors_id) if data['isPatient'] else ''
     appointments_list = [ 
         {'appointment_date': appointment.appointment_date,'reason':appointment.reason,
-        'slot_number': appointment.slot_number, 'slot': appointment.slot,'patient_id':appointment.patient_id, 'patient_name': get_patient_details_from_id(appointment.patient_id),'isCancelled': appointment.isCancelled, } 
+        'slot_number': appointment.slot_number, 'doctor_name': doc_name ,'slot': appointment.slot,'id': appointment.id,'patient_id':appointment.patient_id, 'patient_name': get_user_details_from_id(appointment.patient_id),'isCancelled': appointment.isCancelled, } 
         for appointment in appointments
     ]
 
@@ -150,22 +157,23 @@ def cancel_appointment():
 
     patient_id = data['patient_id']
     doctors_id = data['doctors_id']
+    app_id = data['app_id']
     userObj = User.query.filter_by(id=patient_id).first()
-    appointment = Booking.query.filter_by(patient_id=patient_id).filter_by(doctors_id=doctors_id).first()
+    appointment = Booking.query.filter_by(id=app_id).first()
     appointment.isCancelled = True
     db.session.add(appointment)
     db.session.commit()
-    doctor = get_patient_details_from_id(doctors_id)
+    doctor = get_user_details_from_id(doctors_id)
 
     send_email(userObj.email, 'isCancelled',doctor, userObj.firstname, appointment.appointment_date, appointment.slot )
     return jsonify({'message': 'appoitment canceled'}) ,200
 
 
-def get_patient_details_from_id(patient_id):
+def get_user_details_from_id(user_id):
 
-    patient = User.query.filter_by(id=patient_id).first()
+    user = User.query.filter_by(id=user_id).first()
 
-    return f"{patient.firstname} {patient.lastname}"
+    return f"{user.firstname} {user.lastname}"
 
 
     
