@@ -120,7 +120,7 @@ def book_appointments():
     appointment = Booking(reason=reason,appointment_date=appointment_date,additional_comments=additional_comments,
                 slot_number=slot_number,slot = slot, patient_id=patient_id,doctors_id=doctors_id)
     userObj = User.query.filter_by(id=patient_id).first()
-    print(userObj)
+    print(userObj, patient_id)
     doctor = get_user_details_from_id(doctors_id)
     db.session.add(appointment)
     send_email(userObj.email,'isBooked',doctor, userObj.firstname,appointment_date,slot)
@@ -140,7 +140,7 @@ def get_day_appointments():
     else:
         appointments = Booking.query.filter_by(doctors_id=data['id']).all()
         # doctor_name = get_user_details_from_id(data['id']) a if a < b else b
-    doc_name = get_user_details_from_id(appointments[0].doctors_id) if data['isPatient'] else ''
+    doc_name = get_user_details_from_id(appointments[0].doctors_id) if data['isPatient'] and appointments else ''
     appointments_list = [ 
         {'appointment_date': appointment.appointment_date,'reason':appointment.reason,
         'slot_number': appointment.slot_number, 'doctor_name': doc_name ,'slot': appointment.slot,'id': appointment.id,'patient_id':appointment.patient_id, 'patient_name': get_user_details_from_id(appointment.patient_id),'isCancelled': appointment.isCancelled, } 
