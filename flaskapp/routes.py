@@ -143,7 +143,7 @@ def get_day_appointments():
     doc_name = get_user_details_from_id(appointments[0].doctors_id) if data['isPatient'] and appointments else ''
     appointments_list = [ 
         {'appointment_date': appointment.appointment_date,'reason':appointment.reason,
-        'slot_number': appointment.slot_number, 'doctor_name': doc_name ,'slot': appointment.slot,'id': appointment.id,'patient_id':appointment.patient_id, 'patient_name': get_user_details_from_id(appointment.patient_id),'isCancelled': appointment.isCancelled, } 
+        'slot_number': appointment.slot_number, 'doctor_name': doc_name ,'slot': appointment.slot,'id': appointment.id,'patient_id':appointment.patient_id, 'patient_name': get_user_details_from_id(appointment.patient_id),'doctors_id':appointment.doctors_id,'isCancelled': appointment.isCancelled, } 
         for appointment in appointments
     ]
 
